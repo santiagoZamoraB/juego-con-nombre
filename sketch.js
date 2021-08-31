@@ -9,7 +9,7 @@ var cajasVY = -7;
 var fondo,fondoI;
 var asteroidesI1, asteroidesI2;
 var sun, sunImage;
-var gameOverI;
+var gameOverI, gameOver
 
 function preload(){
   
@@ -26,6 +26,11 @@ function setup(){
   createCanvas (800,800);
 
   gameState ="start";
+
+  gameOver = createSprite(400,400,10,10);
+  gameOver.addImage(gameOverI);
+  gameOver.scale = 0.50;
+  
   
   //fondo = createSprite(400,400,100,100);
  // fondo. addImage(fondoI);
@@ -82,7 +87,6 @@ function draw(){
   }  
     
   if(gameState === "play"){
-    
     
     personaje.y = personaje.y -10;
     personajeM();
@@ -179,10 +183,8 @@ function cajasSpawn(){
   console.log(cajasW,cajasVY)
 }
 function gameTheOver(){
-  var gameOver = createSprite(400,400,10,10);
-  gameOver.addImage(gameOverI);
-  gameOver.scale = 0.50;
   
+  gameOver.visible= true;
   cajasGroup.destroyEach();
   vidasGroup.destroyEach();
   
@@ -192,6 +194,8 @@ function gameTheOver(){
 }
 function theStart(){
   
+  gameOver. visible= false;
+
   personaje.x = 400;
   personaje.y = 400;
   
