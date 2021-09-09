@@ -27,6 +27,10 @@ var energiaBarra8;
 var energiaBarra9;
 var energiaBarra10;
 var edges;
+var mapasGrupo
+var score; 
+var niveles
+
 
 
 
@@ -107,7 +111,8 @@ function setup(){
   personaje.scale = 0.25;
   //personaje. addImage(personajeI);
   personaje.addAnimation('runing',personajeA);
-  
+  personaje.debug = true;
+  personaje.setCollider("circle",0,0,100);
   
 }
 function draw(){
@@ -115,9 +120,11 @@ function draw(){
   console.log(gameState);
  
   if(gameState === "start"){
+    niveles = "nivel 1";
     vidas = 30;
     energia = 100;
     cajasVY = -7;
+    score = 500;
     theStart();
   
 
@@ -129,39 +136,54 @@ function draw(){
   }  
     
   if(gameState === "play"){
-    mostrarVidas();
-    mostrarEnergia();
+    
+    console.log();
 
+    
 
-    personaje.collide(edges[0,1,2,3]);
-    personaje.y = personaje.y -10;
-    personajeM();
-    personaje.changeAnimation("runing",personajeA)
-  
-  
-  if(personaje.isTouching(vidasGroup)){
-    vidasGroup.destroyEach();
-    vidas = vidas + 2;
-    energia = 100;
-  }
+    if(niveles = 1 ){
     
-  if(personaje.isTouching(cajasGroup)){
-  cajasGroup.destroyEach();
-  vidas = vidas - 5; 
-  energia = energia -15;
-  }
+      mostrarVidas();
+      mostrarEnergia();
+
+      personaje.collide(edges[0,1,2,3]);
+      personaje.y = personaje.y -10;
+      personajeM();
+      personaje.changeAnimation("runing",personajeA)
     
-  if(personaje.isTouching(sun)){
-    vidas = vidas -1;
-  }
     
-  livesSpawn();
-  cajasSpawn();
-  
-  if(vidas < 0 || vidas === 0){
-    gameState = "GameOver";
-  }  
-  estrellas();
+    if(personaje.isTouching(vidasGroup)){
+      vidasGroup.destroyEach();
+      vidas = vidas + 2;
+      energia = 100;
+    }
+      
+    if(personaje.isTouching(cajasGroup)){
+    cajasGroup.destroyEach();
+    vidas = vidas - 5; 
+    energia = energia -15;
+    }
+      
+    if(personaje.isTouching(sun)){
+      vidas = vidas -1;
+    }
+      
+    livesSpawn();
+    cajasSpawn();
+    
+    if(vidas < 0 || vidas === 0){
+      gameState = "GameOver";
+    }  
+    estrellas();
+    
+     if(score < 1){
+       niveles = 2;
+    }
+    }
+    if(niveles = 2){
+      console.log("Hola");
+    }
+
   }
   
   if(gameState === "GameOver"){
@@ -187,7 +209,8 @@ function personajeM(){
 
   if(keyDown("s") && energia > 0){
     personaje.y = personaje.y +20;
-    energia = energia - 0.5;
+    energia = energia - 0.75;
+    score = score - 10;
   }
   if(keyDown("a")){
     personaje.x = personaje.x -20;
@@ -219,6 +242,7 @@ function cajasSpawn(){
     cajas.velocityY= cajasVY;
     cajas.lifetime = 850;
     cajasGroup. add(cajas);
+    cajas.debug = true 
     switch(rdm2){
       case 1:
       cajas.addImage(asteroidesI1);
