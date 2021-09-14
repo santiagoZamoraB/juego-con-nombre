@@ -29,7 +29,7 @@ var energiaBarra10;
 var edges;
 var mapasGrupo
 var score; 
-var niveles
+var niveles = 1;
 
 
 
@@ -48,6 +48,7 @@ function preload(){
 }
 function setup(){
   createCanvas (windowWidth,windowHeight);
+
 
   gameState ="start";
 
@@ -141,7 +142,7 @@ function draw(){
 
     
 
-    if(niveles = 1 ){
+    if(niveles === 1 ){
     
       mostrarVidas();
       mostrarEnergia();
@@ -180,7 +181,7 @@ function draw(){
        niveles = 2;
     }
     }
-    if(niveles = 2){
+    if(niveles === 2){
       console.log("Hola");
     }
 
