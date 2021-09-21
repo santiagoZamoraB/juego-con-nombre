@@ -29,8 +29,9 @@ var energiaBarra10;
 var edges;
 var mapasGrupo
 var score; 
-var niveles = 1;
-
+var niveles = 2;
+var paredG
+var paredRG
 
 
 
@@ -53,6 +54,8 @@ function setup(){
   gameState ="start";
 
   edges = createEdgeSprites();
+
+  
 
   sun = createSprite(400,25,1000,200);
   sun. shapeColor = (255, 128, 0);
@@ -103,6 +106,8 @@ function setup(){
   vidasGroup = new Group();
   cajasGroup = new Group();
   estrellasG = new Group();
+  paredG = new Group();
+  paredRG = new Group();
   
   
   
@@ -118,10 +123,10 @@ function setup(){
 }
 function draw(){
  background(0);
-  console.log(gameState);
+ // console.log(gameState);
  
   if(gameState === "start"){
-    niveles = "nivel 1";
+    //niveles = 1;
     vidas = 30;
     energia = 100;
     cajasVY = -7;
@@ -138,7 +143,7 @@ function draw(){
     
   if(gameState === "play"){
     
-    console.log();
+    //console.log();
 
     
 
@@ -178,11 +183,15 @@ function draw(){
     estrellas();
     
      if(score < 1){
+      personaje.y = 200;
+      personaje.x = 200;
        niveles = 2;
     }
     }
     if(niveles === 2){
-      console.log("Hola");
+    
+      nivel2()
+
     }
 
   }
@@ -208,6 +217,10 @@ function draw(){
 }
 function personajeM(){
 
+  if(keyDown("w") && niveles === 2){
+    personaje.y = personaje.y -20;
+  }
+  
   if(keyDown("s") && energia > 0){
     personaje.y = personaje.y +20;
     energia = energia - 0.75;
@@ -440,4 +453,46 @@ function mostrarEnergia(){
   if(energia === 0 ){
     energiaBarra1 .shapeColor = "grey";
   }
+}
+function nivel2(){
+
+  personajeM();
+  mapa();
+
+
+}
+function mapa(){
+  var pared  = createSprite(1100,600,1600,20);
+  paredG.add(pared);
+  var pared2 = createSprite(1600,900,20,400);
+  paredG.add(pared2);
+  var pared3 = createSprite(300,200,20,500);
+  paredG.add(pared3);
+  var pared4 = createSprite(1000,750,20,300);
+  paredG.add(pared4);
+  var pared5 = createSprite(500,900,20,300);
+  paredG.add(pared5);
+  var pared6 = createSprite(1000,440,1600,20);
+  paredG.add(pared6);
+  var pared7 = createSprite(1000,100,20,300);
+  paredG.add(pared7);
+  var pared8 = createSprite(1450,300,20,300);
+  paredG.add(pared8);
+  var pared9 = createSprite(600,300,20,300);
+
+  personaje.bounceOff(paredG);
+
+  var paredr = createSprite(windowWidth- 10, windowHeight, 20,2000);
+  paredRG.add(paredr);
+  var paredr2 = createSprite(10, windowHeight / 2,20,2000  );
+  paredRG.add(paredr2);
+  var paredr3 = createSprite(windowWidth / 2, windowHeight, 2000,30);
+  paredRG.add(paredr3);
+  var paredr4 = createSprite(windowWidth / 2, 10, 2000, 20);
+  paredRG.add(paredr4);
+  
+  personaje.bounceOff(paredRG);
+
+  
+  
 }
