@@ -32,8 +32,11 @@ var score;
 var niveles = 2;
 var paredG
 var paredRG
-
-
+var objetosG
+var timer = 100;
+var cuantasllaves = 0;
+var puertaSecreta;
+var llaves, llaves2, llaves3
 
 function preload(){
   
@@ -57,7 +60,7 @@ function setup(){
 
   
 
-  sun = createSprite(400,25,1000,200);
+  sun = createSprite(400,25,windowWidth,200);
   sun. shapeColor = (255, 128, 0);
   
   vidasBarra0 = createSprite(80,105,20,20);
@@ -94,7 +97,44 @@ function setup(){
   energiaBarra10 = createSprite(windowWidth - 200,100,10,50);
   energiaBarra10.shapeColor = "blue";
 
-  gameOver = createSprite(400,400,10,10);
+
+  paredG = new Group();
+  paredRG = new Group();
+  objetosG = new Group();
+
+  var pared  = createSprite(1100,600,1600,20);
+  paredG.add(pared);
+  var pared2 = createSprite(1600,900,20,400);
+  paredG.add(pared2);
+  var pared3 = createSprite(300,200,20,500);
+  paredG.add(pared3);
+  var pared4 = createSprite(1000,750,20,300);
+  paredG.add(pared4);
+  var pared5 = createSprite(500,900,20,300);
+  paredG.add(pared5);
+  var pared6 = createSprite(1000,440,1600,20);
+  paredG.add(pared6);
+  var pared7 = createSprite(1000,100,20,300);
+  paredG.add(pared7);
+  var pared8 = createSprite(1450,300,20,300);
+  paredG.add(pared8);
+  var pared9 = createSprite(600,300,20,300);
+  paredG.add(pared9);
+
+
+  var paredr = createSprite(windowWidth- 10, windowHeight, 20,2000);
+  paredRG.add(paredr);
+  var paredr2 = createSprite(10, windowHeight / 2,20,2000  );
+  paredRG.add(paredr2);
+  var paredr3 = createSprite(windowWidth / 2, windowHeight, 2000,30);
+  paredRG.add(paredr3);
+  var paredr4 = createSprite(windowWidth / 2, 10, 2000, 20);
+  paredRG.add(paredr4);
+
+  paredG. setVisibleEach(false);
+  paredRG.setVisibleEach(false);
+
+  gameOver = createSprite(windowWidth/2,windowHeight/2,10,10);
   gameOver.addImage(gameOverI);
   gameOver.scale = 0.50;
   
@@ -106,9 +146,9 @@ function setup(){
   vidasGroup = new Group();
   cajasGroup = new Group();
   estrellasG = new Group();
-  paredG = new Group();
-  paredRG = new Group();
-  
+
+  puertaSecreta = createSprite(windowWidth-30, windowHeight-65,20,100)
+  puertaSecreta.visible = false;
   
   
   
@@ -117,7 +157,6 @@ function setup(){
   personaje.scale = 0.25;
   //personaje. addImage(personajeI);
   personaje.addAnimation('runing',personajeA);
-  personaje.debug = true;
   personaje.setCollider("circle",0,0,100);
   
 }
@@ -148,7 +187,7 @@ function draw(){
     
 
     if(niveles === 1 ){
-    
+
       mostrarVidas();
       mostrarEnergia();
 
@@ -156,6 +195,9 @@ function draw(){
       personaje.y = personaje.y -10;
       personajeM();
       personaje.changeAnimation("runing",personajeA)
+      timer = 24;
+      cuantasllaves = 0;
+      puertaSecreta.visible = false;
     
     
     if(personaje.isTouching(vidasGroup)){
@@ -189,9 +231,27 @@ function draw(){
     }
     }
     if(niveles === 2){
-    
-      nivel2()
 
+      nivel2()
+      mostrarVidas();
+      mostrarEnergia();
+      if(personaje.isTouching(objetosG,removeObject)){
+        cuantasllaves = cuantasllaves + 1;
+        energia = 100
+        
+      }
+      if(cuantasllaves === 3){
+        puertaSecreta.visible = true;
+      }
+      else{
+        puertaSecreta.visible = false;
+      }
+      if(timer < 1){
+        gameState = "GameOver";
+      }
+      if(personaje.isTouching(puertaSecreta)){
+        gameState = "GameOver"
+      }
     }
 
   }
@@ -203,9 +263,13 @@ function draw(){
       }
     
     if(keyDown("r")){
+      niveles = 1;
       gameState = "start";
       resetear();
     }
+  }
+  if(gameState === "End"){
+    gameTheOver()
   }
   
   drawSprites();
@@ -213,18 +277,20 @@ function draw(){
   stroke("black");
   textSize(25);
   text("Energía: "+ Math.round(energia),windowWidth - 290,110);
+  text("tiempo:"+ timer,windowWidth/2,110 );
   
 }
 function personajeM(){
 
   if(keyDown("w") && niveles === 2){
     personaje.y = personaje.y -20;
+    energia = energia -0.75; 
   }
   
   if(keyDown("s") && energia > 0){
     personaje.y = personaje.y +20;
     energia = energia - 0.75;
-    score = score - 10;
+    score = score - 1;
   }
   if(keyDown("a")){
     personaje.x = personaje.x -20;
@@ -247,7 +313,7 @@ function livesSpawn(){
 }
 function cajasSpawn(){
 
-  if(frameCount % 100 === 0){
+  if(frameCount % 75 === 0){
 
     var random3 = Math.round(random(1,windowHeight - 100))
     var cajas = createSprite(random3,windowHeight + 20,20,20);
@@ -256,7 +322,6 @@ function cajasSpawn(){
     cajas.velocityY= cajasVY;
     cajas.lifetime = 850;
     cajasGroup. add(cajas);
-    cajas.debug = true 
     switch(rdm2){
       case 1:
       cajas.addImage(asteroidesI1);
@@ -276,6 +341,9 @@ function cajasSpawn(){
 function gameTheOver(){
   
   gameOver.visible= true;
+  paredG. setVisibleEach(false);
+  paredRG. setVisibleEach(false);
+  objetosG.setVisibleEach(false);
   cajasGroup.destroyEach();
   vidasGroup.destroyEach();
   
@@ -307,7 +375,7 @@ function estrellas(){
         estrellas.addImage(estrellasI);
         estrellas. scale = 0.10;
         estrellas. velocityY = -5;
-        estrellas. lifetime = 130;
+        estrellas. lifetime = 200;
         estrellasG. add(estrellas);
         
   }
@@ -458,41 +526,33 @@ function nivel2(){
 
   personajeM();
   mapa();
+  Timer();
+  objects();
+  
 
 
 }
 function mapa(){
-  var pared  = createSprite(1100,600,1600,20);
-  paredG.add(pared);
-  var pared2 = createSprite(1600,900,20,400);
-  paredG.add(pared2);
-  var pared3 = createSprite(300,200,20,500);
-  paredG.add(pared3);
-  var pared4 = createSprite(1000,750,20,300);
-  paredG.add(pared4);
-  var pared5 = createSprite(500,900,20,300);
-  paredG.add(pared5);
-  var pared6 = createSprite(1000,440,1600,20);
-  paredG.add(pared6);
-  var pared7 = createSprite(1000,100,20,300);
-  paredG.add(pared7);
-  var pared8 = createSprite(1450,300,20,300);
-  paredG.add(pared8);
-  var pared9 = createSprite(600,300,20,300);
 
-  personaje.bounceOff(paredG);
-
-  var paredr = createSprite(windowWidth- 10, windowHeight, 20,2000);
-  paredRG.add(paredr);
-  var paredr2 = createSprite(10, windowHeight / 2,20,2000  );
-  paredRG.add(paredr2);
-  var paredr3 = createSprite(windowWidth / 2, windowHeight, 2000,30);
-  paredRG.add(paredr3);
-  var paredr4 = createSprite(windowWidth / 2, 10, 2000, 20);
-  paredRG.add(paredr4);
-  
+  paredG. setVisibleEach(true);
+  paredRG. setVisibleEach(true);
   personaje.bounceOff(paredRG);
+  personaje.bounceOff(paredG);
+  
+}
 
+function Timer(){
   
+  if(frameCount % 25 === 0 ){
+    timer = timer - 1;
+  }
   
+ 
+}
+function objects(){
+objetosG.setVisibleEach(true);
+
+}
+function removeObject(sprite, objetosG){
+  objetosG.remove();
 }
