@@ -29,11 +29,11 @@ var energiaBarra10;
 var edges;
 var mapasGrupo
 var score; 
-var niveles = 2;
+var niveles = 1;
 var paredG
 var paredRG
 var objetosG
-var timer = 100;
+var timer = 24;
 var cuantasllaves = 0;
 var puertaSecreta;
 var llaves, llaves2, llaves3
@@ -149,8 +149,7 @@ function setup(){
 
   puertaSecreta = createSprite(windowWidth-30, windowHeight-65,20,100)
   puertaSecreta.visible = false;
-  
-  
+    
   
   personaje = createSprite(400,400,40,40);
   personaje.shapeColor = "white";
@@ -171,6 +170,17 @@ function draw(){
     cajasVY = -7;
     score = 500;
     theStart();
+    cuantasllaves = 0;
+    llaves = createSprite(1300,350,20,20);
+    objetosG.add(llaves);
+    llaves.shapeColor = "blue";
+    llaves2 = createSprite(450,350,20,20);
+    objetosG.add(llaves2);
+    llaves2.shapeColor = "blue";
+    llaves3 = createSprite(750,950,20,20)
+    objetosG.add(llaves3);
+    llaves3.shapeColor = "blue";
+    objetosG.setVisibleEach(false);
   
 
   
@@ -196,7 +206,6 @@ function draw(){
       personajeM();
       personaje.changeAnimation("runing",personajeA)
       timer = 24;
-      cuantasllaves = 0;
       puertaSecreta.visible = false;
     
     
@@ -240,7 +249,7 @@ function draw(){
         energia = 100
         
       }
-      if(cuantasllaves === 3){
+      if(cuantasllaves > 3){
         puertaSecreta.visible = true;
       }
       else{
@@ -528,6 +537,8 @@ function nivel2(){
   mapa();
   Timer();
   objects();
+  cajasGroup.destroyEach();
+  vidasGroup.destroyEach();
   
 
 
